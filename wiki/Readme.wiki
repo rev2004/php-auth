@@ -20,7 +20,7 @@ This is a simple PHP system for securely authenticating users against a MySQL da
 
 = Use =
   # Copy the files into a directory on the web server. 
-  # Edit the '[auth.ini]' file to set the proper values for the database and the script's location, as well as the options for logging.
+  # Edit the '[Configuration auth.ini]' file to set the proper values for the database and the script's location, as well as the options for logging.
   # Import the 'auth_db.sql' file into the database.
   #Add your users with your favorite database management utility.  Make sure that the passwords in the database are stored as md5 hashes! (a web-based javascript md5 hashing utility is included).
   # On any page that you wish to secure, include the 'secure.php' file with the require statement:
