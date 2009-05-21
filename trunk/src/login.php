@@ -12,19 +12,29 @@
 		$auth_sql = "SELECT * FROM `{$config['tables']['users']}` WHERE `username` = '$username'";
 		$result = mysql_query($auth_sql);
 		$user_record = mysql_fetch_assoc($result);
-
-		if($_REQUEST['no_js']==1)
+		if($config['options']['use_oath'] != 'true')
 		{
-			$password = md5(mysql_real_escape_string($_REQUEST['password']));
-			$encrypted_pw = $user_record['password'];
-		}		
+			if($_REQUEST['no_js']==1)
+			{
+				$password = md5(mysql_real_escape_string($_REQUEST['password']));
+				$encrypted_pw = $user_record['password'];
+			}		
+			else
+			{
+				$password = mysql_real_escape_string($_REQUEST['crypt_password']);
+				$obj_crypt = new Crypt_HMAC($user_record['password']);
+				$encrypted_pw = $obj_crypt->hash($_SESSION['challenge']);
+			}
+			$authenticated = $encrypted_pw==$password;
+		}
 		else
 		{
-			$password = mysql_real_escape_string($_REQUEST['crypt_password']);
-			$obj_crypt = new Crypt_HMAC($user_record['password']);
-			$encrypted_pw = $obj_crypt->hash($_SESSION['challenge']);
+			require "./oath.php";
+			$oath = new oath;
+			$authenticated = $oath->check_key(base64_decode($user_record['oath_key']),$_REQUEST['oath_response']);
 		}
-		if($encrypted_pw==$password)
+		
+		if($authenticated)
 		{
 			$auth_sql = "UPDATE `{$config['tables']['users']}` SET `cookie` = '" . session_id() . "' WHERE `username` = '$username'";
 			mysql_query($auth_sql)
@@ -55,12 +65,11 @@
 				$log_sql = "INSERT INTO `{$config['tables']['log']}` (`event_time`,`event`,`username`,`ip_address`) VALUES(NOW(),'failure','$username','{$_SERVER['REMOTE_ADDR']}')";
 				mysql_query($log_sql)
 					or trigger_error(mysql_error());
+				
 			}
-			header("Location: {$_SERVER['SCRIPT_URI']}");
+			$error = "Login failed";
 		}
 	}
-	else
-	{
 		require_once "rKeyGen.php";
 		$_SESSION['challenge'] = rKeyGen(16);
 		$bottom = "";
@@ -102,21 +111,38 @@
 				</div>
 			</noscript>
 			<div id="login_form_body">
+				<?php echo "<p>{$error}</p>";?>
 				<input type="hidden" name="url" id="url" value="<?php echo $_REQUEST['url'];?>"/>
 				<input type="hidden" name="crypt_password" id="crypt_password" />
 				<div id="login" class="field">
 					<span id="login_prompt" class="prompt">Login</span>
 					<input type="text" name="username" id="username" class="field_data"/>
 				</div>
+				<?php
+					switch($config['options']['use_oath'])
+					{
+						case 'true':
+				?>
+				<div id="oath_response" class="field">
+					<span id="response_prompt" class="prompt">Token</span>
+					<input type="text" name="oath_response" id="text_oath_response" class="field_data"/>
+				</div>
+				<?php
+						break;
+						default:
+				?>
 				<div id="password" class="field">
 					<span id="password_prompt" class="prompt">Password</span>
 					<input type="password" name="password" id="text_password" class="field_data"/>
 				</div>
+				<?php
+						break;
+					}
+				?>
 				<input type="submit" name="action" value="Login" id="login_button" />
 			</div>
 		</form>
 
 <?php
 	echo $bottom;
-}
 ?>

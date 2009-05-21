@@ -8,7 +8,7 @@
 
 	if(mysql_num_rows($result)==0)
 	{
-		header("Location: {$config['auth']['base_dir']}/login.php?url={$_SERVER['SCRIPT_URI']}");
+		header("Location: {$config['auth']['base_dir']}/login.php?url={$_SERVER['REQUEST_URI']}");
 		exit;
 	}
 	else

@@ -5,7 +5,15 @@
 	width: 179px;
 	font-size: 1em;
 }
-#login_form h1
+
+#password_form
+{
+	border: 1px solid;
+	font-family: sans-serif;
+	width: 230px;
+	font-size: 1em;
+}
+#login_form h1, #password_form h1
 {
 	padding: 0;
 	margin: 0;
@@ -35,16 +43,16 @@
 	margin: 5px;
 	text-align: justify;
 }
-#login_form .field
+#login_form .field, #password_form .field
 {
 	text-align: right;	
 	font-size: .8em;			
 }
-#login_form .prompt:after
+#login_form .prompt:after, #password_form .prompt:after
 {
 	content: ":";
 }
-#login_form .field_data
+#login_form .field_data, #password_form .field_data
 {
 	width: 100px;
 	font-size: .8em;

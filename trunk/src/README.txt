@@ -1,10 +1,11 @@
-php-auth v1.2
+simple PHP authentication v1.1
 by Brent Maxwell <brent@thebrent.net>
 Description:
 	This is a simple PHP system for securely authenticating users against a MySQL database.
 
 Features:
 	- Passwords stored as md5 hashes
+	- ability to use OATH compliant HOTP tokens
 	- Client sends hashed passwords
 		- When login script is accessed, it generates a challenge that is stored in a session 
 		  variable and sent to the client.  When the client submits the form, the script uses this 
@@ -18,11 +19,10 @@ Features:
 	- Ability to be included in other pages
 		- The login form can be utilized stand-alone, or included in another page with zero
 		  modification.
-	- Configurable logging of successful and failed logins, logouts, and page accesses.
 
 Use:
-	Copy the files into a directory on the web server.  Edit the 'auth.ini' file to set the
-	proper values for the database and the script's location, as well as the options for logging.
+	Copy the files into a directory on the web server.  Edit the 'auth_config.php' file to set the
+	proper values for the database and the script's location.
 
 	Import the 'auth_db.sql' file into the database.
 
@@ -31,17 +31,14 @@ Use:
 
 	On any page that you wish to secure, include the 'secure.php' file with the require statement:
 
-		require "[auth_dir]/secure.php";
+		require "auth_dir/secure.php";
 	
-	where [auth_dir] is the directory that the script was installed.
+	where auth_dir is the directory that the script was installed.
 
+	If OATH HOTP keys are desired, place the base64 encoded key in the oath_key field of the auth_users table.
+	
 	That's it!
-
-Version History
-	- 2009/05/01 - Version 1.2 - added configurable logging
-	- ???? - Version 1.0 - basic login system
 
 Todo:
 	- Individual page permissions
 	- User access levels
-	- OpenId support
