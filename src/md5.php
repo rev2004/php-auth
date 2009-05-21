@@ -12,7 +12,7 @@
 	</head>
 	<body onload="hash()">
 		<form>
-			Password:  <input type="text" name="pw" id="pw"/>
+			Password:  <input type="text" name="pw" id="pw" value="<?php echo $_REQUEST['pw'];?>"/>
 			<input type="button" name="Hash" value="Hash" onclick="hash()"/>
 			<br/>
 			md5:  <input type="text" name="js_md5" id="js_md5" size="40"/>
