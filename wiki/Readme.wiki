@@ -43,3 +43,4 @@ where auth_dir is the directory that the script was installed.
   * Individual page permissions
   * User access levels
   * OpenId support
+  * Security groups
