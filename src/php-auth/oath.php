@@ -11,7 +11,7 @@ class oath
 		{
 			$values[] = $this->oath_key($key,$i,strlen($response));
 		}
-		return(in_array($response,$values));
+		return(in_array($response,$values) && !empty($response));
 	}
 	
 	function get_time_counter()

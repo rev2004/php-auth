@@ -12,6 +12,7 @@
 		$auth_sql = "SELECT * FROM `{$config['tables']['users']}` WHERE `username` = '$username'";
 		$result = mysql_query($auth_sql);
 		$user_record = mysql_fetch_assoc($result);
+		$authenticated = false;
 		if($config['options']['use_oath'] != 'true')
 		{
 			if($_REQUEST['no_js']==1)
