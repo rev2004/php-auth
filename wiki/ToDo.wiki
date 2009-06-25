@@ -1,0 +1,8 @@
+#summary Items to do
+#labels Phase-Design,Phase-Requirements
+
+= Todo =
+  * Individual page permissions
+  * User access levels
+  * OpenId support
+  * Security groups
