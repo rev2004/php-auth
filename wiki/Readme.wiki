@@ -30,17 +30,3 @@ require "auth_dir/secure.php";
 }}}
 
 where auth_dir is the directory that the script was installed.
-
-= Version History = 
-  * 2009/06/11 - Version 1.3
-    * added password change function
-    * added the ability to use OATH compliant HOTP tokens
-  * 2009/05/01 - Version 1.2
-    * added configurable logging
-  * ???? - Version 1.0
-
-= Todo =
-  * Individual page permissions
-  * User access levels
-  * OpenId support
-  * Security groups
