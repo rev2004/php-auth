@@ -1,4 +1,5 @@
 #summary Readme.txt for php-auth
+#labels Phase-Implementation,Phase-Deploy,Phase-Requirements,Phase-Design
 
 = Description =
 This is a simple PHP system for securely authenticating users against a MySQL database.
