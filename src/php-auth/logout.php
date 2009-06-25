@@ -3,25 +3,18 @@
 	$config = parse_ini_file("auth.ini",true);
 	require_once "auth_database.php";
 
-	$auth_sql = "SELECT * FROM `{$config['tables']['users']}` WHERE `cookie` = '" . session_id() . "'";
-	$result = mysql_query($auth_sql);
-
-	if(mysql_num_rows($result)==0)
+	if(!check_auth(session_id()))
 	{
-		header("Location: {$config['auth']['base_dir']}/login.php?url={$_SERVER['SCRIPT_URI']}");
+		header("Location: {$config['auth']['base_dir']}/login.php?url={$_SERVER['REQUEST_URI']}");
 		exit;
 	}
 	else
 	{
 		if($config['log']['logout'] == 'true')
 		{
-			$log_sql = "INSERT INTO `{$config['tables']['log']}` (`event_time`,`event`,`username`,`ip_address`) VALUES(NOW(),'logout','{$_SESSION['user']['username']}','{$_SERVER['REMOTE_ADDR']}')";
-			mysql_query($log_sql)
-				or trigger_error(mysql_error());
+			log_event('logout');
 		}
-		$logout_sql = "UPDATE `{$config['tables']['users']}` SET `cookie` = NULL WHERE `cookie` = '" . session_id() . "'";
-		mysql_query($logout_sql)
-			or trigger_error(mysql_error());
+		logout(session_id());
 		
 		session_destroy();
 		echo "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";

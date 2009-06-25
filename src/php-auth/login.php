@@ -7,12 +7,9 @@
 		require_once "auth_database.php";
 		require_once "crypt_hmac.php";
 		
-		$username = mysql_real_escape_string($_REQUEST['username']);
-
-		$auth_sql = "SELECT * FROM `{$config['tables']['users']}` WHERE `username` = '$username'";
-		$result = mysql_query($auth_sql);
-		$user_record = mysql_fetch_assoc($result);
+		$user_record = get_user($_REQUEST['username']);
 		$authenticated = false;
+
 		if($config['options']['use_oath'] != 'true')
 		{
 			if($_REQUEST['no_js']==1)
@@ -37,15 +34,11 @@
 		
 		if($authenticated)
 		{
-			$auth_sql = "UPDATE `{$config['tables']['users']}` SET `cookie` = '" . session_id() . "' WHERE `username` = '$username'";
-			mysql_query($auth_sql)
-				or trigger_error(mysql_error());
+			login($user_record['username'],session_id());
 			$_SESSION['user'] = $user_record;			
 			if($config['log']['login'] == 'true')
 			{
-				$log_sql = "INSERT INTO `{$config['tables']['log']}` (`event_time`,`event`,`username`,`ip_address`) VALUES(NOW(),'login','{$_SESSION['user']['username']}','{$_SERVER['REMOTE_ADDR']}')";
-				mysql_query($log_sql)
-					or trigger_error(mysql_error());
+				log_event('login');
 			}
 			$_SESSION['logged_in'] = true;							
 
@@ -63,10 +56,7 @@
 		{
 			if($config['log']['failed'] == 'true')
 			{
-				$log_sql = "INSERT INTO `{$config['tables']['log']}` (`event_time`,`event`,`username`,`ip_address`) VALUES(NOW(),'failure','$username','{$_SERVER['REMOTE_ADDR']}')";
-				mysql_query($log_sql)
-					or trigger_error(mysql_error());
-				
+				log_event('failure');
 			}
 			$error = "Login failed";
 		}
@@ -87,7 +77,7 @@
 			$bottom = "</body>\n</html>";
 		}
 ?>
-		<form action="<?php echo $_SERVER['SCRIPT_URI'];?>" method="post" onsubmit="submitForm()" id="login_form">
+		<form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post" onsubmit="submitForm()" id="login_form">
 			<h1>Login</h1>
 			<script type="text/javascript" src="md5.js"></script>
 			<script type="text/javascript">
