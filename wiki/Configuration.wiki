@@ -1,4 +1,5 @@
 #summary Configuration of php-auth
+#labels Phase-Deploy
 
 The `auth.ini` file is very simple.  It is divided into four sections, and generally looks like this:
 {{{
@@ -20,6 +21,9 @@ login = "true"
 logout = "true"
 access = "true"
 failed = "true"
+
+[options]
+use_oath = "false"
 }}}
 
 = `auth` =
@@ -31,12 +35,15 @@ failed = "true"
   * `username`: The username to connect to the database.
   * `password`: The password for connecting to the database.
 
-=` tables` =
+= `tables` =
   * `users`: The table that user information is stored.  Only needs to be changed if the default `auth_users` was changed.
   * `log`: The table that authentication logs are stored.  Only needs to be changed if the default `auth_log` was changed.
 
-=` log` =
+= `log` =
   * `login`: Set `"true"` to log all successful logins.
   * `logout`: Set `"true"` to log all logouts.
   * `access`: Set `"true"` to log all successful page accesses.
   * `failed`: Set `"true"` to log all failed logins.
+
+= `options` =
+  * `use_oath`: Set `"true"` to use OATH HOTP tokens instead of passwords.
